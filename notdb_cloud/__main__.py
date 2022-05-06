@@ -2,6 +2,7 @@ import argparse
 import os
 import pyonr
 import notdb
+from app import create_app
 
 def main():
    pass
@@ -22,6 +23,27 @@ def get_version(rel_path):
 
 def get_filename():
    return input('filename: ')
+
+def get_port():
+   inp = input('Server PORT (default=5000): ')
+   if inp:
+      return int(inp)
+   return 5000
+
+def is_taken_port(port: int):
+   # got this from https://stackoverflow.com/questions/2470971/fast-way-to-test-if-a-port-is-in-use-using-python
+   import socket
+   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+      return s.connect_ex(('localhost', port)) == 0
+
+def get_y_n(prompt:str):
+   inp = input(prompt).lower()
+
+   if inp == 'y':
+      return True
+   if inp == 'n':
+      return False
+   return None
 
 def stabilize_file(_r:pyonr.Read):
    schema = {
@@ -49,6 +71,22 @@ if __name__ == '__main__' or __name__ == 'notdb_cloud.__main__':
    parser.add_argument('-v', '--version', action='version', version=f'notdb_cloud {v}', help='Show the notdb_cloud version')
    
    args = parser.parse_args()
+
+   if args.command == 'run':
+      port = get_port()
+      if is_taken_port(port):
+         parser.error('Used port')
+
+      take_password_once = get_y_n('Do you want to get asked for db password once (y/n)? ')
+      if take_password_once == None:
+         parser.error('Invalid answer.')
+
+      app = create_app()
+      app.take_password_once = take_password_once
+      app.askedForPassword = False
+
+      app.run('0.0.0.0', port=port)
+      exit()
 
    filename = get_filename()
    if args.command == 'create':
@@ -78,6 +116,3 @@ if __name__ == '__main__' or __name__ == 'notdb_cloud.__main__':
 
    elif args.command == 'delete':
       os.remove(filename)
-
-   elif args.command == 'run':
-      pass

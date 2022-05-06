@@ -1,6 +1,6 @@
 '''
 NotDB Cloud
------
+-----------
 
 **NotDB Cloud** is an API that allows you to read and write data from your machine to a database on the cloud
 
@@ -30,15 +30,19 @@ def get_version(rel_path):
 setup(
    name='notdb_cloud',
    packages=find_packages(),
+   include_package_data=True,
    install_requires=[
-      'notdb>=1.0.2' 
+      'notdb>=1.0.2',
+      'notdb-viewer>=1.2.4',
       'pyonr>=1.0.0',
       'bcrypt>=3.2.0',
       'flask',
-      'flask_minify'
+      'flask-minify',
+      'termcolor'
    ],
    version=get_version('notdb_cloud/__init__.py'),
    description='An API to send or get data from NotDB databases on cloud',
+   long_description_content_type='text/x-rst',
    author='Nawaf Alqari',
    author_email='nawafalqari13@gmail.com',
    keywords=['notdb', 'db', 'database', 'notdatabsae', 'simple database'],

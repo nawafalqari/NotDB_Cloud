@@ -1,0 +1,1 @@
+include notdb_cloud/app/templates/*.html
