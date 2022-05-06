@@ -11,5 +11,5 @@ Full documentation is avaliable on [Github](https://github.com/nawafalqari/NotDB
 
 from .app import is_secured
 
-__version__ = '1.0.0b4'
+__version__ = '1.0.0b5'
 __all__ = ['is_secured']
