@@ -1,1 +1,1 @@
-{'__docs': [{'name': 'Nawaf'}, {'name': 'Mohammed'}]}
+{'__docs': [{'Hello': 'Yes', 'online': True}, {'Bye': 'No', 'online': True}]}

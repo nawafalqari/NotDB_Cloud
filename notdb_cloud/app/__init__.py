@@ -45,45 +45,21 @@ def create_app():
                   app.config[f'{db_name}_p'] = password
             except notdb.WrongPasswordError:
                return render_template('get_password.html', error='Password is wrong.', db=db_name)
+               
          elif request.method == 'BRING':
-            try:
-               password = request.form.get('password', '')
-               if is_secured(file):
-                  db = notdb.NotDBClient(db_name, password=password)
-               else:
-                  db = notdb.NotDBClient(db_name)
-               data = refresh_data(file)
-
-               return f'{data}'
-            except notdb.WrongPasswordError:
-               err = 'Error: Invalid password'
-               print(colored(f'\n{err}\n', 'red'))
-
-               return f'{err}'
+            data = refresh_data(file)
+            return f'{data}'
          
          elif request.method == 'UPDATE':
-            try:
-               password = request.form.get('password', '')
-               if is_secured(file):
-                  db = notdb.NotDBClient(db_name, password=password)
-               else:
-                  db = notdb.NotDBClient(db_name)
-               
-               update = request.form.get('update', None)
-               if not update:
-                  err = 'Error: Invalid update'
-                  print(colored(f'\n{err}\n', 'red'))
-               
-                  return f'{err}'
-                  
-               file.write(update)
-               return 'Success'
-
-            except notdb.WrongPasswordError:
-               err = 'Error: Invalid password'
+            update = request.form.get('update', None)
+            if not update:
+               err = 'Error: Invalid update'
                print(colored(f'\n{err}\n', 'red'))
-
+            
                return f'{err}'
+               
+            file.write(update)
+            return 'Success'
 
          else:
             if app.config.get(f'{db_name}_p', None):
