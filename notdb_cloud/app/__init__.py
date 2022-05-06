@@ -29,12 +29,14 @@ def create_app():
    def index():
       return 'Home'
 
-   @app.route('/<db_name>', methods=['GET', 'POST', 'BRING', 'UPDATE'])
+   @app.route('/<db_name>', methods=['GET', 'POST', 'CONNECT', 'BRING', 'UPDATE'])
    def db_viewer(db_name):
       try:
          file = pyonr.Read(db_name)
          db = None
 
+         if request.method == 'CONNECT':
+            return 'Success'
          if request.method == 'POST':
             try:
                password = request.form.get('password', '')
