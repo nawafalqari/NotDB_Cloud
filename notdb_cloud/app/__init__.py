@@ -3,6 +3,7 @@ import notdb
 from notdb_viewer import viewer_html
 import pyonr
 from termcolor import colored
+import os
 
 def refresh_data(file:pyonr.Read) -> dict:
    return file.readfile
@@ -21,13 +22,23 @@ def is_secured(file:pyonr.Read):
       return True
    return False
 
+def find_ndb_files(path):
+   p = path
+   if path == '.':
+      p = os.getcwd()
+   files = [f for f in os.listdir(p) if f.endswith('.ndb')]
+
+   return files
+
 def create_app():
    
    app = Flask(__name__)
 
    @app.route('/', methods=['GET'])
    def index():
-      return 'Home'
+      dbs = find_ndb_files('.')
+      host = f'{request.base_url}'
+      return render_template('index.html', host=host, dbs=dbs)
 
    @app.route('/<db_name>', methods=['GET', 'POST', 'CONNECT', 'BRING', 'UPDATE'])
    def db_viewer(db_name):
@@ -77,7 +88,7 @@ def create_app():
          return render_template('viewer.html',
                         documents=db.get({}),
                         db_info=db_info,
-                        host=db.host,
+                        host=f'{request.base_url}',
                         get_obj_class_name=get_obj_class_name,
                         get_class=get_class,
                         f=file)
