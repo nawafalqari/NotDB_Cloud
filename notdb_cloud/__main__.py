@@ -2,7 +2,9 @@ import argparse
 import os
 import pyonr
 import notdb
-from .app import create_app
+from app import create_app
+from bcrypt import checkpw
+from getpass import getpass
 
 def main():
    pass
@@ -55,6 +57,9 @@ def stabilize_file(_r:pyonr.Read):
          _r.write(schema)
    except AttributeError:
       _r.write(schema)
+
+def get_pass():
+   return getpass('Password: ').encode('utf-8')
 
 v = get_version('__init__.py')
 
@@ -110,9 +115,24 @@ if __name__ == '__main__' or __name__ == 'notdb_cloud.__main__':
 
       stabilize_file(file)
       filedata = file.readfile
+      password = filedata.get('__password')
+      if password:
+         upassword = get_pass()
+         if not checkpw(upassword, password):
+            raise notdb.WrongPasswordError()
 
       filedata['__docs'].clear()
       file.write(filedata)
 
    elif args.command == 'delete':
+      file = pyonr.Read(filename)
+
+      stabilize_file(file)
+      filedata = file.readfile
+      
+      password = filedata.get('__password')
+      if password:
+         upassword = get_pass()
+         if not checkpw(upassword, password):
+            raise notdb.WrongPasswordError()
       os.remove(filename)
