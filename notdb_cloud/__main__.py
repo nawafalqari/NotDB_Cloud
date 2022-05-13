@@ -2,7 +2,7 @@ import argparse
 import os
 import pyonr
 import notdb
-from app import create_app
+from .app import create_app
 from bcrypt import checkpw
 from getpass import getpass
 
