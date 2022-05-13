@@ -80,3 +80,7 @@ for example:
 ```
 [IP]:[PORT]/test.ndb
 ```
+
+### Databases On Replit
+Fork the [Replit Template](https://replit.com/@nawafhq/NotDB-Cloud-Database-Template?v=1), follow the instructions in the README
+![gif](./images/replit.gif)
